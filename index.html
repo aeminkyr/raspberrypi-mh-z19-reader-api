@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <title>Co2 data</title>
+    </head>
+    <body>
+        <p id="co2"></p>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
+        <script>
+            const apiPass = "123456";
+            const apiUrl = "http://127.0.0.1:3000/get/co2/"+apiPass;
+            const refreshDataPerSecond = 5;
+
+            get_co2();
+            function get_co2(){
+            var jqxhr = $.ajax( apiUrl )
+            .done(function(data) {
+              //  alert( "success"+ data.co2_data );
+              var co2ppm = data.co2_data;
+              var text;
+
+              if(co2ppm <= 500)
+                    text = "Good";
+                else if(co2ppm>=500 && co2ppm<=1000 )
+                    text = "High";
+                else if(co2ppm>1000)
+                    text = "Danger";
+
+
+                $("#co2").text(text);
+            })
+            .fail(function() {
+              console.log("connot get co2 data!");
+            })
+            .always(function() {
+               // alert( "complete" );
+            });
+        }
+
+            setInterval(function(){get_co2();}, refreshDataPerSecond*1000);
+
+        </script>
+    </body>
+</html>
